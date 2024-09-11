@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservatório Esvaziando</title>
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+</head>
+<body>
+    <div class="container2">
+        <h1>Dados do Reservatório</h1><!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Página Principal</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                    padding: 20px;
+                }
+                .container {
+                    background-color: #fff;
+                    padding: 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    max-width: 500px;
+                    width: 100%;
+                }
+                h1 {
+                    font-size: 24px;
+                    margin-bottom: 20px;
+                }
+                p {
+                    font-size: 18px;
+                    margin: 10px 0;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Dados do Reservatório</h1>
+                <p id="dados"></p>
+            </div>
+        
+            <script>
+                // Recupera os dados armazenados no localStorage
+                const dadosReservatorio = JSON.parse(localStorage.getItem('dadosReservatorio'));
+        
+                // Verifica se os dados existem
+                if (dadosReservatorio) {
+                    // Cria uma string com os dados para exibir na página
+                    let dadosTexto = `Tipo de Reservatório: ${dadosReservatorio.tipoReservatorio}<br>`;
+                    
+                    if (dadosReservatorio.tipoReservatorio === 'circular') {
+                        dadosTexto += `Raio: ${dadosReservatorio.raio} m<br>`;
+                    } else if (dadosReservatorio.tipoReservatorio === 'retangular') {
+                        dadosTexto += `Largura: ${dadosReservatorio.largura} m<br>`;
+                       
+                        dadosTexto += `Comprimento: ${dadosReservatorio.comprimento} m<br>`;
+                    }
+        
+                    dadosTexto += `Profundidade: ${dadosReservatorio.profundidade} m<br>`;
+        
+                    // Exibe os dados na página
+                    document.getElementById('dados').innerHTML = dadosTexto;
+                } else {
+                    document.getElementById('dados').innerHTML = 'Nenhum dado encontrado.';
+                }
+            </script>
+        </body>
+        </html>
+        
+        <p id="dados"></p>
+
+<div class="container">
+    <canvas id="reservoirCanvas"></canvas>
+    <div class="controls">
+        <label for="cd">Coeficiente de Descarga (Cd):</label>
+        <input type="number" id="cd" min="0.3" max="0.99" step="0.01" value="0.6">
+        <input type="range" id="cdSlider" min="0.3" max="0.99" step="0.01" value="0.6">
+        <span id="cdValue">0.6</span>
+    
+        <label for="height">Altura Inicial da Lâmina d'Água (m):</label>
+        <input type="number" id="height" min="1" step="0.01">
+        <input type="range" id="heightSlider" min="1" step="0.01">
+        <span id="heightValue"></span>
+        
+        <label id="radiusLabel" for="radius" style="display:none;">Raio do Orifício (cm):</label>
+        <input type="number" id="radius" min="1" max="15" step="1" value="5" style="display:none;">
+        <input type="range" id="radiusSlider" min="1" max="15" step="1" value="5" style="display:none;">
+        <span id="radiusValue" style="display:none;">5</span>
+        
+    
+        <label for="width" id="widthLabel" style="display:none;">Largura do Orifício (cm):</label>
+        <input type="number" id="width" min="1" max="15" step="1" value="1" style="display:none;">
+        <input type="range" id="widthSlider" min="1" max="15" step="1" value="1" style="display:none;">
+        <span id="widthValue" style="display:none;">1</span>
+    
+        <label for="heightOrificio" id="heightOrificioLabel" style="display:none;">Altura do Orifício (cm):</label>
+        <input type="number" id="heightOrificio" min="1" max="15" step="1" value="1" style="display:none;">
+        <input type="range" id="heightOrificioSlider" min="1" max="15" step="1" value="1" style="display:none;">
+        <span id="heightOrificioValue" style="display:none;">1</span>
+    
+        <p id="timeLabel">Tempo de Esvaziamento Restante: 0 s</p>
+        <p id="flowRateLabel">Vazão: 0 m³/s</p>
+        <p id="heightText">Altura da Lâmina d'Água: 0 m</p>
+        <button id="pauseButton">Esvaziar</button>
+    </div>
+    
+</div>
+<script src="manifest.js"></script>
+</body>
+</html>

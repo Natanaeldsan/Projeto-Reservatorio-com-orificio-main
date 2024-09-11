@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados do Reservatório</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        select, input[type="number"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .input-group, .depth-group {
+            display: none;
+        }
+        .input-group label, .depth-group label {
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="reservatorioForm">
+        <label for="gravidade">Gravidade considerada (m/s²):</label>
+        <input type="number" id="gravidade" name="gravidade" value="9.81" step="0.01" min="9.76" max="10" required>
+
+        <label for="tipoOrificio">Tipo de Orifício:</label>
+        <select id="tipoOrificio" name="tipoOrificio" required>
+            <option value="" disabled selected>Selecione</option>
+            <option value="circular">Circular</option>
+            <option value="retangular">Retangular</option>
+        </select>
+
+        <label for="tipoReservatorio">Tipo de Reservatório:</label>
+        <select id="tipoReservatorio" name="tipoReservatorio" required onchange="mostrarCamposReservatorio()">
+            <option value="" disabled selected>Selecione</option>
+            <option value="circular">Cilíndrico</option>
+            <option value="retangular">Retangular</option>
+        </select>
+
+        <div id="circularReservatorio" class="input-group">
+            <label for="raio">Raio (m):</label>
+            <input type="number" id="raio" name="raio" step="0.01" min="0" placeholder="0.00">
+        </div>
+
+        <div id="retangularReservatorio" class="input-group">
+            <label for="largura">Largura (m):</label>
+            <input type="number" id="largura" name="largura" step="0.01" min="0" placeholder="0.00">
+            <label for="comprimento">Comprimento (m):</label>
+            <input type="number" id="comprimento" name="comprimento" step="0.01" min="0" placeholder="0.00">
+        </div>
+
+        <div id="depthGroup" class="depth-group">
+            <label for="profundidade">Profundidade (m):</label>
+            <input type="number" id="profundidade" name="profundidade" step="0.01" min="0" required placeholder="0.00">
+        </div>
+
+        <input type="submit" value="Enviar">
+    </form>
+
+    <script>
+        function mostrarCamposReservatorio() {
+            const tipoReservatorio = document.getElementById('tipoReservatorio').value;
+            const circularReservatorio = document.getElementById('circularReservatorio');
+            const retangularReservatorio = document.getElementById('retangularReservatorio');
+            const depthGroup = document.getElementById('depthGroup');
+
+            circularReservatorio.style.display = 'none';
+            retangularReservatorio.style.display = 'none';
+            depthGroup.style.display = 'none'; // Esconde o grupo de profundidade inicialmente
+
+            if (tipoReservatorio === 'circular') {
+                circularReservatorio.style.display = 'block';
+                depthGroup.style.display = 'block'; // Exibe o grupo de profundidade
+            } else if (tipoReservatorio === 'retangular') {
+                retangularReservatorio.style.display = 'block';
+                depthGroup.style.display = 'block'; // Exibe o grupo de profundidade
+            }
+        }
+
+        document.getElementById('reservatorioForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Impede o envio tradicional do formulário
+    
+    // Coleta valores do formulário
+    const gravidade = parseFloat(document.getElementById('gravidade').value.replace(',', '.')) || 9.81; // Valor padrão se não for definido
+    const tipoOrificio = document.getElementById('tipoOrificio').value;
+    const tipoReservatorio = document.getElementById('tipoReservatorio').value;
+    const raio = parseFloat(document.getElementById('raio').value.replace(',', '.')) || 0;
+    const largura = parseFloat(document.getElementById('largura').value.replace(',', '.')) || 0;
+    const comprimento = parseFloat(document.getElementById('comprimento').value.replace(',', '.')) || 0;
+    const profundidade = parseFloat(document.getElementById('profundidade').value.replace(',', '.')) || 0;
+
+    // Valida os campos obrigatórios
+    if (!tipoOrificio || !tipoReservatorio) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+
+    if (tipoReservatorio === 'circular' && raio <= 0) {
+        alert('Por favor, preencha o valor do raio.');
+        return;
+    }
+
+    if (tipoReservatorio === 'retangular' && (largura <= 0 || comprimento <= 0)) {
+        alert('Por favor, preencha os valores de largura e comprimento.');
+        return;
+    }
+
+    if (profundidade <= 0) {
+        alert('Por favor, preencha o valor da profundidade.');
+        return;
+    }
+
+    // Cria o objeto com os dados
+    const dados = {
+        gravidade: gravidade,
+        tipoOrificio: tipoOrificio, // Adiciona o tipo de orifício
+        tipoReservatorio: tipoReservatorio,
+        raio: tipoReservatorio === 'circular' ? raio : null,
+        largura: tipoReservatorio === 'retangular' ? largura : null,
+        comprimento: tipoReservatorio === 'retangular' ? comprimento : null,
+        profundidade: profundidade
+    };
+
+    // Salva os dados no localStorage
+    localStorage.setItem('dadosReservatorio', JSON.stringify(dados));
+
+    // Redireciona para a página principal após um curto atraso para garantir o armazenamento
+    setTimeout(() => {
+        window.location.href = 'principal.html';
+    }, 500); // Atraso para garantir o armazenamento
+    });
+
+    </script>
+
+</body>
+</html>
